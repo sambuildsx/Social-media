@@ -1,0 +1,40 @@
+import { useState } from "react";
+import ServerList from "../components/ServerList";
+import ChannelList from "../components/ChannelList";
+import MessageList from "../components/MessageList";
+import MessageInput from "../components/MessageInput";
+
+export default function Chat(){
+
+const [serverId,setServerId] = useState(null)
+const [channelId,setChannelId] = useState(null)
+
+return(
+
+<div className="flex h-[80vh] border border-[#1E293B] rounded-xl overflow-hidden">
+
+<ServerList
+serverId={serverId}
+setServerId={setServerId}
+/>
+
+<ChannelList
+serverId={serverId}
+channelId={channelId}
+setChannelId={setChannelId}
+/>
+
+<div className="flex-1 flex flex-col">
+
+<div className="flex-1 overflow-y-auto p-4">
+<MessageList channelId={channelId}/>
+</div>
+
+<MessageInput channelId={channelId}/>
+
+</div>
+
+</div>
+
+)
+}
