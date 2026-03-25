@@ -1,12 +1,28 @@
 import Feed from "./Feed";
 import Chat from "./Chat";
 import Profile from "./Profile";
-import { useState } from "react";
+import SearchUsers from "./SearchUsers";
+import { useState, useEffect } from "react";
+import api from "../api/axios";
 
 export default function Dashboard(){
 
 const [page,setPage] = useState("feed")
 const [profileId,setProfileId] = useState(null)
+const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("user")) || null)
+
+useEffect(() => {
+  async function fetchMe() {
+    try {
+      const res = await api.get("/profile/me");
+      setCurrentUser(res.data.user);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+    } catch (err) {
+      console.error("Failed to load profile", err);
+    }
+  }
+  fetchMe();
+}, [page]);
 
 function openProfile(id){
   setProfileId(id)
@@ -42,13 +58,24 @@ Chat
 </button>
 
 <button
+onClick={() => setPage("search")}
+className={`hover:text-white transition ${page === "search" ? "text-white" : ""}`}
+>
+Search
+</button>
+
+<button
 onClick={() => {
 setProfileId(null)
 setPage("profile")
 }}
-className={`hover:text-white transition ${page === "profile" ? "text-white" : ""}`}
+className={`hover:opacity-80 transition flex items-center justify-center w-8 h-8 rounded-full ${currentUser?.avatar ? '' : 'bg-cyan-500 text-black font-bold'}`}
 >
-Profile
+  {currentUser?.avatar ? (
+    <img src={currentUser.avatar} alt="Profile" className="w-full h-full object-cover rounded-full" />
+  ) : (
+    currentUser?.username?.charAt(0).toUpperCase() || "P"
+  )}
 </button>
 
 </div>
@@ -63,6 +90,8 @@ Profile
 {page==="feed" && <Feed openProfile={openProfile}/>}
 
 {page==="chat" && <Chat/>}
+
+{page==="search" && <SearchUsers openProfile={openProfile} />}
 
 {page==="profile" && <Profile userId={profileId}/>}
 

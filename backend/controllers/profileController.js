@@ -48,7 +48,7 @@ async function getUserProfile(req, res) {
       author: userId
     }).sort({ createdAt: -1 });
 
-    const isFollowing = user.followers.includes(req.user.id);
+    const isFollowing = user.followers.some(id => id.toString() === req.user.id);
 
     res.json({
       user,
@@ -69,7 +69,41 @@ async function getUserProfile(req, res) {
   }
 }
 
+async function updateProfile(req, res) {
+  try {
+    const { avatar } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { avatar },
+      { new: true }
+    ).select("-password");
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+async function searchUsers(req, res) {
+  try {
+    const { q } = req.query;
+    if (!q) return res.json([]);
+    const users = await User.find({
+      $or: [
+        { username: { $regex: q, $options: "i" } },
+        { realName: { $regex: q, $options: "i" } }
+      ]
+    }).select("-password").limit(20);
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 module.exports = {
   getMyProfile,
-  getUserProfile
+  getUserProfile,
+  updateProfile,
+  searchUsers
 };

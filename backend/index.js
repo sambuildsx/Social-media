@@ -11,6 +11,7 @@ const messageRoutes = require("./routes/messageRoutes");
 const followRoutes = require("./routes/followRoutes");
 const postRoutes = require("./routes/postRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
 
 const initSocket = require("./sockets/chatSocket");
 
@@ -22,6 +23,7 @@ app.use(cors({
   origin: "http://localhost:5173"
 }));
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -31,6 +33,7 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/follow",followRoutes);
 app.use("/api/posts",postRoutes);
 app.use("/api/profile",profileRoutes);
+app.use("/api/upload", uploadRoutes);
 
 // 404
 app.use((req, res) => {

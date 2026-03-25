@@ -81,6 +81,8 @@ function initSocket(server) {
           sender: socket.user.id,
           channel: channelId,
         });
+
+        await message.populate("sender", "username avatar");
       
         console.log("Message saved:", message._id);
       

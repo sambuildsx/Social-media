@@ -4,14 +4,15 @@ async function createPost(req,res){
 
   try{
 
-    const { content } = req.body;
+    const { content, image } = req.body;
 
     const post = await Post.create({
       content,
+      image,
       author:req.user.id
     });
     
-    await post.populate("author","username");
+    await post.populate("author","username realName avatar");
     
     res.status(201).json(post);
 
@@ -38,7 +39,7 @@ async function getFeed(req,res){
       const posts = await Post.find({
         author:{ $in:[...user.following,req.user.id] }
       })
-      .populate("author","username")
+      .populate("author","username realName avatar")
       .sort({createdAt:-1});
   
       res.json(posts);

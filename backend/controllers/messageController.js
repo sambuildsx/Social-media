@@ -7,6 +7,7 @@ async function getMessages(req, res) {
     const { channelId } = req.params;
 
     const messages = await Message.find({ channel: channelId })
+      .populate("sender", "username avatar")
       .sort({ createdAt: 1 });
 
     res.json(messages);

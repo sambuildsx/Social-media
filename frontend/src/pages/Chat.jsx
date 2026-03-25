@@ -1,13 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ServerList from "../components/ServerList";
 import ChannelList from "../components/ChannelList";
 import MessageList from "../components/MessageList";
 import MessageInput from "../components/MessageInput";
+import socket from "../socket/socket";
 
 export default function Chat(){
 
 const [serverId,setServerId] = useState(null)
 const [channelId,setChannelId] = useState(null)
+
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    socket.auth = { token };
+    socket.connect();
+  }
+
+  return () => {
+    socket.disconnect();
+  };
+}, []);
 
 return(
 
