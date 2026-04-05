@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import api from "../api/axios";
 import socket from "../socket/socket";
 
-export default function MessageList({ channelId }) {
+export default function MessageList({ channelId, openProfile }) {
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
   
@@ -54,7 +54,10 @@ export default function MessageList({ channelId }) {
             
             {/* Avatar */}
             {!isMe && (
-              <div className="w-8 h-8 bg-[#1E293B] rounded-full shrink-0 flex items-center justify-center font-bold text-white overflow-hidden mt-auto">
+              <div 
+                className="w-8 h-8 bg-[#1E293B] rounded-full shrink-0 flex items-center justify-center font-bold text-white overflow-hidden mt-auto cursor-pointer border border-white/5 hover:border-accent/50 transition"
+                onClick={() => openProfile && openProfile(senderId)}
+              >
                 {message.sender?.avatar ? (
                   <img src={message.sender.avatar} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
@@ -64,7 +67,14 @@ export default function MessageList({ channelId }) {
             )}
 
             <div className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}>
-              {!isMe && <span className="font-bold text-gray-400 text-xs mb-1 ml-1">{message.sender?.username || "Unknown"}</span>}
+              {!isMe && (
+                <span 
+                  className="font-bold text-gray-400 hover:text-white text-xs mb-1 ml-1 cursor-pointer transition"
+                  onClick={() => openProfile && openProfile(senderId)}
+                >
+                  {message.sender?.username || "Unknown"}
+                </span>
+              )}
               
               {/* Bubble */}
               <div className={`px-4 py-2 ${isMe ? "bg-cyan-500 text-black rounded-2xl rounded-tr-sm" : "bg-[#1E293B] text-white rounded-2xl rounded-tl-sm"}`}>

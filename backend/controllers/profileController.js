@@ -71,10 +71,16 @@ async function getUserProfile(req, res) {
 
 async function updateProfile(req, res) {
   try {
-    const { avatar } = req.body;
+    const { avatar, realName, bio } = req.body;
+    
+    let updates = {};
+    if (avatar !== undefined) updates.avatar = avatar;
+    if (realName !== undefined) updates.realName = realName;
+    if (bio !== undefined) updates.bio = bio;
+
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { avatar },
+      { $set: updates },
       { new: true }
     ).select("-password");
     res.json(user);

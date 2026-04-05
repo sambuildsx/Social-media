@@ -1,11 +1,11 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 
 export default function GravityStarsBackground({
-  starsCount = 75,
+  starsCount = 200,
   starsSize = 2,
   starsOpacity = 0.75,
   glowIntensity = 15,
-  movementSpeed = 0.3,
+  movementSpeed = 0.5,
   mouseInfluence = 100,
   mouseGravity = "attract",
   gravityStrength = 75,
@@ -120,8 +120,8 @@ export default function GravityStarsBackground({
       p.x += p.vx;
       p.y += p.vy;
 
-      p.vx *= 0.999;
-      p.vy *= 0.999;
+      p.vx += (Math.random() - 0.5) * 0.002;
+      p.vy += (Math.random() - 0.5) * 0.002;
 
       if (p.x < 0) p.x = w;
       if (p.x > w) p.x = 0;

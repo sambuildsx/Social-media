@@ -12,6 +12,8 @@ const followRoutes = require("./routes/followRoutes");
 const postRoutes = require("./routes/postRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
+const dmRoutes = require("./routes/dmRoutes");
 
 const initSocket = require("./sockets/chatSocket");
 
@@ -34,6 +36,8 @@ app.use("/api/follow",followRoutes);
 app.use("/api/posts",postRoutes);
 app.use("/api/profile",profileRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/dm", dmRoutes);
 
 // 404
 app.use((req, res) => {
